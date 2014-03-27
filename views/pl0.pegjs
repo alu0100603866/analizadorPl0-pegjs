@@ -70,9 +70,9 @@ factor = NUMBER
 _ = $[ \t\n\r]*
 
 DOT      = _'.'_
-PROCEDURE = _"PROCEDURE"_
-CONST    = _"CONST"_
-VAR      = _"VAR"_
+PROCEDURE = _"procedure"_
+CONST    = _"const"_
+VAR      = _"var"_
 COMMA    = _","_
 SEMICOLON = _";"_
 DOT      = _"."_
