@@ -65,6 +65,10 @@ block   =  constants:(block_const)? vars:(block_vars)? procs:(block_proc)* s:sta
                st: st
              };
            }
+           
+           condition = e:exp                          { return e; }
+          / e1:exp op:COMPARISON e2:exp { return {type: op, left: e1, right: e2}; }
+ 
 exp    = t:(p:ADD? t:term {return p?{type: p, value: t} : t;})   r:(ADD term)* { return tree(t, r); }
 term   = f:factor r:(MUL factor)* { return tree(f,r); }
 
@@ -74,23 +78,23 @@ factor = NUMBER
 
 _ = $[ \t\n\r]*
 
-DOT			= _'.'_
+DOT		= _'.'_
 PROCEDURE	= _"procedure"_
 CALL		= _"call"_
 CONST		= _"const"_
-VAR			= _"var"_
+VAR		= _"var"_
 BEGIN		= _"begin"_
-END			= _"end"_
+END		= _"end"_
 COMMA		= _","_
 SEMICOLON	= _";"_
-DOT			= _"."_
+COMPARISON 	= _ op:$([=<>!]'='/[<>])_  { return op; }
 ASSIGN		= _ op:'=' _  { return op; }
-ADD			= _ op:[+-] _ { return op; }
-MUL			= _ op:[*/] _ { return op; }
+ADD		= _ op:[+-] _ { return op; }
+MUL		= _ op:[*/] _ { return op; }
 LEFTPAR		= _"("_
 RIGHTPAR	= _")"_
-IF			= _ "if" _
+IF		= _ "if" _
 THEN		= _ "then" _
 ELSE		= _ "else" _
-ID			= _ id:$([a-zA-Z_][a-zA-Z_0-9]*) _ { return { type: 'ID', value: id }; }
+ID		= _ id:$([a-zA-Z_][a-zA-Z_0-9]*) _ { return { type: 'ID', value: id }; }
 NUMBER		= _ digits:$[0-9]+ _ { return { type: 'NUM', value: parseInt(digits, 10) }; }
