@@ -37,7 +37,7 @@ block   =  constants:(block_const)? vars:(block_vars)? procs:(block_proc)* s:sta
 	block_const_assign        = CONST i:ID ASSIGN n:NUMBER { return {type: "=", left: i, right: n}; }
 	block_const_assign_others = COMMA i:ID ASSIGN n:NUMBER { return {type: "=", left: i, right: n}; }
 	block_vars                = VAR v1:ID v2:(COMMA v:ID {return v})* {return [v1].concat(v2); }
-	block_proc               = PROCEDURE i:ID SEMICOLON b:block SEMICOLON {return {type: "PROCEDURE", value: i, body: b }; }
+	block_proc               = PROCEDURE i:ID SEMICOLON b:block SEMICOLON {return {type: "PROCEDURE", value: i, block: b }; }
  
 	statement  = i:ID ASSIGN e:exp            
 		/ CALL i:ID 
@@ -48,7 +48,7 @@ block   =  constants:(block_const)? vars:(block_vars)? procs:(block_proc)* s:sta
 				}; 
 			}
 			/ BEGIN s1:statement s2:(SEMICOLON s:statement {return s;})* END  { return {type: "I_BLOCK", value: [s1].concat(s2)};}
-       / IF e:exp THEN st:statement ELSE sf:statement
+       / IF e:condition THEN st:statement ELSE sf:statement
            {
              return {
                type: 'IFELSE',
@@ -57,7 +57,7 @@ block   =  constants:(block_const)? vars:(block_vars)? procs:(block_proc)* s:sta
                sf: sf,
              };
            }
-       / IF e:exp THEN st:statement    
+       / IF e:condition THEN st:statement    
            {
              return {
                type: 'IF',
@@ -65,9 +65,19 @@ block   =  constants:(block_const)? vars:(block_vars)? procs:(block_proc)* s:sta
                st: st
              };
            }
+		/ WHILE c:condition DO s:statement                             
+		   { 
+			return 
+				{
+					type: "WHILE", 
+					condition: c, 
+					statement: s
+				}; 
+			}
+ 		  / /* empty */ { return ""; } 
            
            condition = e:exp                          { return e; }
-          / e1:exp op:COMPARISON e2:exp { return {type: op, left: e1, right: e2}; }
+				/ e1:exp op:COMPARISON e2:exp { return {type: op, left: e1, right: e2}; }
  
 exp    = t:(p:ADD? t:term {return p?{type: p, value: t} : t;})   r:(ADD term)* { return tree(t, r); }
 term   = f:factor r:(MUL factor)* { return tree(f,r); }
@@ -96,5 +106,7 @@ RIGHTPAR	= _")"_
 IF		= _ "if" _
 THEN		= _ "then" _
 ELSE		= _ "else" _
+WHILE     = _"while"_
+DO        = _"do"_
 ID		= _ id:$([a-zA-Z_][a-zA-Z_0-9]*) _ { return { type: 'ID', value: id }; }
 NUMBER		= _ digits:$[0-9]+ _ { return { type: 'NUM', value: parseInt(digits, 10) }; }
