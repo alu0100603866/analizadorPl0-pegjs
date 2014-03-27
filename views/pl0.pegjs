@@ -37,8 +37,11 @@ block   =  constants:(block_const)? vars:(block_vars)? procs:(block_proc)* s:sta
 	block_const_assign        = CONST i:ID ASSIGN n:NUMBER { return {type: "=", left: i, right: n}; }
 	block_const_assign_others = COMMA i:ID ASSIGN n:NUMBER { return {type: "=", left: i, right: n}; }
 	block_vars                = VAR v1:ID v2:(COMMA v:ID {return v})* {return [v1].concat(v2); }
-	block_proc               = PROCEDURE i:ID SEMICOLON b:block SEMICOLON {return {type: "PROCEDURE", value: i, block: b }; }
+	
+	block_proc               = PROCEDURE i:ID args:block_proc_args? SEMICOLON b:block SEMICOLON {return args? {type: "PROCEDURE", value: i, parameters: args, block: b} :{type: "PROCEDURE", value: i, block: b }; }
+	block_proc_args          = LEFTPAR i1:ID i2:( COMMA i:ID {return i;} )* RIGHTPAR { return [i1].concat(i2); }
  
+	
 	statement  = i:ID ASSIGN e:exp            
 		/ CALL i:ID 
 			{ 
@@ -74,7 +77,8 @@ block   =  constants:(block_const)? vars:(block_vars)? procs:(block_proc)* s:sta
 					statement: s
 				}; 
 			}
- 		  / /* empty */ { return ""; } 
+
+		statement_call_arguments    = LEFTPAR i:(i1:(ID/NUMBER) i2:( COMMA i:(ID/NUMBER) {return i;} )* {return [i1].concat(i2)})? RIGHTPAR {return i};
            
            condition = e:exp                          { return e; }
 				/ e1:exp op:COMPARISON e2:exp { return {type: op, left: e1, right: e2}; }
