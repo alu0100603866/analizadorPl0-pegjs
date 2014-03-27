@@ -22,7 +22,10 @@
 
 program = b:block DOT { return b; }
 
-block   = /* empty */{return ""}
+block   =  c:(c1:block_const_assign c2:block_const_assign_others* {return [c1].concat(c2) })? {return c;}
+ // Reglas de block
+	block_const_assign        = CONST i:CONST_ID ASSIGN n:NUMBER { return {type: "=", left: i, right: n}; }
+	block_const_assign_others = COMMA i:CONST_ID ASSIGN n:NUMBER { return {type: "=", left: i, right: n}; }
 
 st     = i:ID ASSIGN e:exp            
             { return {type: '=', left: i, right: e}; }
@@ -53,6 +56,9 @@ factor = NUMBER
 _ = $[ \t\n\r]*
 
 DOT      = _'.'_
+CONST    = _"CONST"_
+COMMA    = _","_
+DOT      = _"."_
 ASSIGN   = _ op:'=' _  { return op; }
 ADD      = _ op:[+-] _ { return op; }
 MUL      = _ op:[*/] _ { return op; }
@@ -61,6 +67,10 @@ RIGHTPAR = _")"_
 IF       = _ "if" _
 THEN     = _ "then" _
 ELSE     = _ "else" _
+CONST_ID = _ id:$[a-zA-Z_][a-zA-Z_0-9]* _ 
+	{ 
+		return { type: 'CONST ID', value: id }; 
+	}
 ID       = _ id:$([a-zA-Z_][a-zA-Z_0-9]*) _ 
             { 
               return { type: 'ID', value: id }; 
