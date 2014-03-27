@@ -75,6 +75,7 @@ block   =  constants:(block_const)? vars:(block_vars)? procs:(block_proc)* s:sta
 					statement: s
 				}; 
 			}
+		 / /* empty */ { return ""; }
 
 		statement_call_arguments    = LEFTPAR i:(i1:(ID/NUMBER) i2:( COMMA i:(ID/NUMBER) {return i;} )* {return [i1].concat(i2)})? RIGHTPAR {return i};
            
