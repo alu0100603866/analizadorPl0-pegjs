@@ -41,15 +41,14 @@ block   =  constants:(block_const)? vars:(block_vars)? procs:(block_proc)* s:sta
 	block_proc               = PROCEDURE i:ID args:block_proc_args? SEMICOLON b:block SEMICOLON {return args? {type: "PROCEDURE", value: i, parameters: args, block: b} :{type: "PROCEDURE", value: i, block: b }; }
 	block_proc_args          = LEFTPAR i1:ID i2:( COMMA i:ID {return i;} )* RIGHTPAR { return [i1].concat(i2); }
  
-	
+
 	statement  = i:ID ASSIGN e:exp            
-		/ CALL i:ID 
+		/ CALL i:ID  
 			{ 
 				return {
 					type: "CALL", 
-					value: i
-				}; 
-			}
+					value: i 
+				};  		}
 			/ BEGIN s1:statement s2:(SEMICOLON s:statement {return s;})* END  { return {type: "BLOCK", value: [s1].concat(s2)};}
        / IF e:condition THEN st:statement ELSE sf:statement
            {
@@ -70,8 +69,7 @@ block   =  constants:(block_const)? vars:(block_vars)? procs:(block_proc)* s:sta
            }
 		/ WHILE c:condition DO s:statement                             
 		   { 
-			return 
-				{
+			return {
 					type: "WHILE", 
 					condition: c, 
 					statement: s
