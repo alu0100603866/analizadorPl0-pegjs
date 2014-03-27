@@ -50,7 +50,7 @@ block   =  constants:(block_const)? vars:(block_vars)? procs:(block_proc)* s:sta
 					value: i
 				}; 
 			}
-			/ BEGIN s1:statement s2:(SEMICOLON s:statement {return s;})* END  { return {type: "I_BLOCK", value: [s1].concat(s2)};}
+			/ BEGIN s1:statement s2:(SEMICOLON s:statement {return s;})* END  { return {type: "BLOCK", value: [s1].concat(s2)};}
        / IF e:condition THEN st:statement ELSE sf:statement
            {
              return {
