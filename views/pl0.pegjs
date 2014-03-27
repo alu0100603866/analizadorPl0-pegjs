@@ -20,6 +20,10 @@
   }
 }
 
+program = b:block DOT { return b; }
+
+block   = /* empty */{return ""}
+
 st     = i:ID ASSIGN e:exp            
             { return {type: '=', left: i, right: e}; }
        / IF e:exp THEN st:st ELSE sf:st
@@ -48,6 +52,7 @@ factor = NUMBER
 
 _ = $[ \t\n\r]*
 
+DOT      = _'.'_
 ASSIGN   = _ op:'=' _  { return op; }
 ADD      = _ op:[+-] _ { return op; }
 MUL      = _ op:[*/] _ { return op; }
