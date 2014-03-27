@@ -110,5 +110,7 @@ THEN		= _ "then" _
 ELSE		= _ "else" _
 WHILE     = _"while"_
 DO        = _"do"_
-ID		= _ id:$([a-zA-Z_][a-zA-Z_0-9]*) _ { return { type: 'ID', value: id }; }
+ID		= !SYSTEM_WORDS _ id:$([a-zA-Z_][a-zA-Z_0-9]*) _ { return { type: 'ID', value: id }; }
 NUMBER		= _ digits:$[0-9]+ _ { return { type: 'NUM', value: parseInt(digits, 10) }; }
+
+SYSTEM_WORDS = PROCEDURE / CALL / CONST / VAR / BEGIN / END / WHILE / DO / IF / THEN / ELSE
