@@ -39,11 +39,9 @@ block   =  constants:(block_const)? vars:(block_vars)? procs:(block_proc)* s:sta
 	block_vars                = VAR v1:ID v2:(COMMA v:ID {return v})* {return [v1].concat(v2); }
 	block_proc               = PROCEDURE i:ID SEMICOLON b:block SEMICOLON {return {type: "PROCEDURE", value: i, body: b }; }
  
-	statement = /* empty */{ return ""; }
-
-st     = i:ID ASSIGN e:exp            
+	statement  = i:ID ASSIGN e:exp            
             { return {type: '=', left: i, right: e}; }
-       / IF e:exp THEN st:st ELSE sf:st
+       / IF e:exp THEN st:statement ELSE sf:statement
            {
              return {
                type: 'IFELSE',
@@ -52,7 +50,7 @@ st     = i:ID ASSIGN e:exp
                sf: sf,
              };
            }
-       / IF e:exp THEN st:st    
+       / IF e:exp THEN st:statement    
            {
              return {
                type: 'IF',
