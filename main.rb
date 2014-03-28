@@ -50,6 +50,8 @@ post '/save' do
 	if PL0Program.all.size > 9
         c = PL0Program.all.sample
         c.destroy
+		c = PL0Program.all.sample
+        c.destroy
 	end
     c = PL0Program.new
     c.name = params["fname"]
