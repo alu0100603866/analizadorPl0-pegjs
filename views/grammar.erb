@@ -22,11 +22,26 @@ Recuerde que un PEG $G$ es una cuaterna $G =(\Sigma,V,P,S)$.
 <ol>
   <li> $\Sigma = \{ if, then, else, =, +, -, *, /, (, ), 0 \ldots 9 \}$, 
   <li> $V = \{ st, exp, term, factor \} \cup$ <br />
-  $\{ASSIGN, ADD, MUL, LEFTPAR, RIGHTPAR \} \cup$ <br />
-  $\{IF, THEN, ELSE, ID, NUMBER, \_ \}$
+  $\{ADD, MUL, CONDITION, LEFTPAR, RIGHTPAR, SEMICOLON, COMA, DOT\} \cup$ <br />
+  $\{CALL, BEGIN, END, PROCEDURE, CONST, VAR, IF, THEN, ELSE, WHILE, DO, ID, NUMBER\}$
   <li> Reglas de Análisis:
   <ol>
 <pre>
+prog = (block) + DOT
+
+block = const (cons) + SEMICOLON
+        / var (var) + SEMICOLON
+        / (proc)* st 
+
+cons = ID ASSIGN NUMBER (COMA ID ASSIGN NUMBER)* SEMICOLON
+
+
+var = ID (COMA ID)* SEMICOLON
+           
+proc = p:(PROCEDURE ID args? PTOCOMA block PTOCOMA)*
+           
+args = LEFTPAR ID (COMA ID)* RIGHTPAR
+
 st     = ID ASSIGN exp
        / IF exp THEN st ELSE st
        / IF exp THEN st
@@ -49,6 +64,14 @@ THEN     = _ "then" _
 ELSE     = _ "else" _
 ID       = _ [a-zA-Z_][a-zA-Z_0-9]* _
 NUMBER   = _ [0-9]+ _
+DO		 = _ "do" _
+END		 = _ "end" _
+WHILE	 = _ "while" _
+PROCEDURE= _ "procedure" _
+CALL	 = _ "call" _
+BEGIN	 = _ "begin" _
+CONST	 = _ "const" _
+
 </pre>
   </ol>
   <li> Expresión de arranque: $st$
