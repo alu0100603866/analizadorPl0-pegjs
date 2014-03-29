@@ -83,8 +83,8 @@ module.exports = (function() {
         			},
         peg$c18 = function(i1, i2) {return [i1].concat(i2)},
         peg$c19 = function(i) {return i},
-        peg$c20 = function(e) { return e; },
-        peg$c21 = function(e1, op, e2) { return {type: op, left: e1, right: e2}; },
+        peg$c20 = function(e1, op, e2) { return {type: op, left: e1, right: e2}; },
+        peg$c21 = function(e) { return e; },
         peg$c22 = function(p, t) {return p?{type: p, value: t} : t;},
         peg$c23 = function(t, r) { return tree(t, r); },
         peg$c24 = function(f, r) { return tree(f,r); },
@@ -971,25 +971,13 @@ module.exports = (function() {
       s0 = peg$currPos;
       s1 = peg$parseexp();
       if (s1 !== peg$FAILED) {
-        peg$reportedPos = s0;
-        s1 = peg$c20(s1);
-      }
-      s0 = s1;
-      if (s0 === peg$FAILED) {
-        s0 = peg$currPos;
-        s1 = peg$parseexp();
-        if (s1 !== peg$FAILED) {
-          s2 = peg$parseCOMPARISON();
-          if (s2 !== peg$FAILED) {
-            s3 = peg$parseexp();
-            if (s3 !== peg$FAILED) {
-              peg$reportedPos = s0;
-              s1 = peg$c21(s1, s2, s3);
-              s0 = s1;
-            } else {
-              peg$currPos = s0;
-              s0 = peg$c0;
-            }
+        s2 = peg$parseCOMPARISON();
+        if (s2 !== peg$FAILED) {
+          s3 = peg$parseexp();
+          if (s3 !== peg$FAILED) {
+            peg$reportedPos = s0;
+            s1 = peg$c20(s1, s2, s3);
+            s0 = s1;
           } else {
             peg$currPos = s0;
             s0 = peg$c0;
@@ -998,6 +986,18 @@ module.exports = (function() {
           peg$currPos = s0;
           s0 = peg$c0;
         }
+      } else {
+        peg$currPos = s0;
+        s0 = peg$c0;
+      }
+      if (s0 === peg$FAILED) {
+        s0 = peg$currPos;
+        s1 = peg$parseexp();
+        if (s1 !== peg$FAILED) {
+          peg$reportedPos = s0;
+          s1 = peg$c21(s1);
+        }
+        s0 = s1;
       }
 
       return s0;
