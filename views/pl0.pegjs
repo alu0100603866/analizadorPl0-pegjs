@@ -78,8 +78,9 @@ block   =  constants:(block_const)? vars:(block_vars)? procs:(block_proc)* s:sta
 
 		statement_call_arguments    = LEFTPAR i:(i1:(ID/NUMBER) i2:( COMMA i:(ID/NUMBER) {return i;} )* {return [i1].concat(i2)})? RIGHTPAR {return i};
            
-           condition = e:exp                          { return e; }
-				/ e1:exp op:COMPARISON e2:exp { return {type: op, left: e1, right: e2}; }
+        condition = e1:exp op:COMPARISON e2:exp { return {type: op, left: e1, right: e2}; }
+		/e:exp                          { return e; }
+		
  
 exp    = t:(p:ADD? t:term {return p?{type: p, value: t} : t;})   r:(ADD term)* { return tree(t, r); }
 term   = f:factor r:(MUL factor)* { return tree(f,r); }
