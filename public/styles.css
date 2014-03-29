@@ -1,8 +1,15 @@
 body {
-  font-family: Helvetica, Arial, sans-serif; }
+  font-family: Helvetica, Arial, sans-serif; 
+    background: white url('background.jpg');
+    background-size: cover;
+    background-position: center 0;
+    background-attachment: fixed;
+    margin-left: 5%;
+    margin-right: 5%;
+}
 
 h1 {
-  color: #990033;
+  color: #0066CC;
   font: 32px/1 Helvetica, Arial, sans-serif; }
 
 header h1 {
