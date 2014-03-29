@@ -33,15 +33,9 @@ suite( 'Analizador sintáctico con PEGJS', function(){ //Suite equivale al descr
   });
   
   test('Constructor de condicion', function(){
-    var result = pl0.parse("if a = b then j = a else j = b.");
-    var esperado = '{\n  "type": "PROGRAM",\n  "bloque": [\n    [],\n    {\n      "type": "IFELSE",\n      "c": {\n        "type": "==",\n        "left": {\n          "type": "ID",\n          "value": "a"\n        },\n        "right": {\n          "type": "ID",\n          "value": "b"\n        }\n      },\n      "st": {\n        "type": "=",\n        "left": {\n          "type": "ID",\n          "value": "j"\n        },\n        "right": {\n          "type": "ID",\n          "value": "a"\n        }\n      },\n      "sf": {\n        "type": "=",\n        "left": {\n          "type": "ID",\n          "value": "j"\n        },\n        "right": {\n          "type": "ID",\n          "value": "b"\n        }\n      }\n    }\n  ]\n}';
-    assert.deepEqual(JSON.stringify(result,undefined,2), esperado);
-  });
-  
-  test('Constructores de termino y factor', function(){
-    var result = pl0.parse("A = 3 * 4 + 2.");
-    var esperado = '{\n  "type": "PROGRAM",\n  "bloque": [\n    [],\n    {\n      "type": "=",\n      "left": {\n        "type": "ID",\n        "value": "A"\n      },\n      "right": {\n        "type": "+",\n        "left": {\n          "type": "*",\n          "left": {\n            "type": "NUM",\n            "value": 3\n          },\n          "right": {\n            "type": "NUM",\n            "value": 4\n          }\n        },\n        "right": {\n          "type": "NUM",\n          "value": 2\n        }\n      }\n    }\n  ]\n}';
-    assert.deepEqual(JSON.stringify(result,undefined,2), esperado);
+    var result = pl0.parse("if a==b \n then a=b \n else b = b+1.");
+    var esperado = '[\n  {\n    "type": "IFELSE",\n    "c": {\n      "type": "==",\n      "left": {\n        "type": "ID",\n        "value": "a"\n      },\n      "right": {\n        "type": "ID",\n        "value": "b"\n      }\n    },\n    "st": [\n      {\n        "type": "ID",\n        "value": "a"\n      },\n      "=",\n      {\n        "type": "ID",\n        "value": "b"\n      }\n    ],\n    "sf": [\n      {\n        "type": "ID",\n        "value": "b"\n      },\n      "=",\n      {\n        "type": "+",\n        "left": {\n          "type": "ID",\n          "value": "b"\n        },\n        "right": {\n          "type": "NUM",\n          "value": 1\n        }\n      }\n    ]\n  }\n]'
+	assert.deepEqual(JSON.stringify(result,undefined,2), esperado);
   });
   
   test('Error gramatico', function(){
