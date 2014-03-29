@@ -23,6 +23,9 @@ helpers do
   end
 end
 
+get '/test' do
+  erb :test
+end
 
 get '/grammar' do
   erb :grammar
@@ -60,6 +63,4 @@ post '/save' do
   redirect '/'
 end
 
-get '/test' do
-  erb :test
-end
+
